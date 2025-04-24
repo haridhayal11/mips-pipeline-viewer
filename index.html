@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    <meta charset="UTF-8" />
+    <title>MIPS 5‑Stage Pipeline Viewer</title>
+    <style>
+        :root {
+            --stage-width: 13rem;
+            --reg-width: 1rem;
+        }
+        * { box-sizing: border-box; }
+        body {
+            font-family: "Segoe UI", Consolas, monospace;
+            background: #f5f7fa;
+            margin: 2rem;
+            colour: #222;
+        }
+        #wrapper {
+            max-width: calc(var(--stage-width) * 5 + var(--reg-width) * 4 + 8rem);
+            margin: auto;
+        }
+        h1 {
+            text-align: centre;
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+        }
+        #toolbar {
+            display: flex;
+            gap: 1rem;
+            align-items: centre;
+            margin-bottom: 2rem;
+            justify-content: centre;
+        }
+        #cycleCounter { font-weight: bold; }
+
+        /* ───────────────────  Pipeline layout  ─────────────────── */
+        #pipeline {
+            display: flex;
+            align-items: flex-start;
+            justify-content: centre;
+            flex-wrap: nowrap;
+            gap: 1.25rem;
+        }
+        .stage {
+            position: relative;
+            width: var(--stage-width);
+            min-height: 12rem;
+            background: #ffffff;
+            border: 2px solid #486ebd;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+            display: flex;
+            flex-direction: column;
+        }
+        .stage::after { /* arrow */
+            content: "→";
+            position: absolute;
+            right: -1.2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.3rem;
+            font-weight: bold;
+        }
+        .stage:last-of-type::after { display: none; }
+
+        .stage-name {
+            text-align: centre;
+            font-weight: bold;
+            padding-top: 0.4rem;
+        }
+        .stage-body {
+            padding: 0.5rem 0.75rem 0.75rem;
+            white-space: pre-wrap;
+            font-size: 0.9rem;
+            flex: 1;
+        }
+
+        /* Pipeline register (green bar) */
+        .reg {
+            display: flex;
+            flex-direction: column;
+            align-items: centre;
+        }
+        .reg-bar {
+            width: var(--reg-width);
+            height: 14rem;
+            background: #2eaf50;
+            border-radius: 4px;
+        }
+        .reg-label {
+            margin-top: 0.4rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+        }
+
+        /* Help text */
+        #help {
+            text-align: centre;
+            margin-top: 1rem;
+            font-size: 0.85rem;
+            colour: #555;
+        }
+
+        /* Optional colour cues for common opcodes */
+        .stage-body strong { font-weight: 700; }
+    </style>
+</head>
+<body>
+    <div id="wrapper">
+        <h1>MIPS 5‑Stage Pipeline Viewer</h1>
+
+        <div id="toolbar">
+            <input type="file" id="logFile" accept=".txt,.log" />
+            <span id="cycleCounter"></span>
+        </div>
+
+        <div id="pipeline">
+            <div class="stage" id="stage-IF"><div class="stage-name">IF</div><div class="stage-body"></div></div>
+            <div class="reg"><div class="reg-bar"></div><div class="reg-label">IF/ID</div></div>
+
+            <div class="stage" id="stage-ID"><div class="stage-name">ID</div><div class="stage-body"></div></div>
+            <div class="reg"><div class="reg-bar"></div><div class="reg-label">ID/EX</div></div>
+
+            <div class="stage" id="stage-EX"><div class="stage-name">EX</div><div class="stage-body"></div></div>
+            <div class="reg"><div class="reg-bar"></div><div class="reg-label">EX/MEM</div></div>
+
+            <div class="stage" id="stage-MEM"><div class="stage-name">MEM</div><div class="stage-body"></div></div>
+            <div class="reg"><div class="reg-bar"></div><div class="reg-label">MEM/WB</div></div>
+
+            <div class="stage" id="stage-WB"><div class="stage-name">WB</div><div class="stage-body"></div></div>
+        </div>
+
+        <div id="help">Drag a simulator log or use the file chooser, then step through cycles with ← / → (or A / D).</div>
+    </div>
+
+    <script src="viewer.js"></script>
+</body>
+</html>
